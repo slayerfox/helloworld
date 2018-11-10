@@ -24,25 +24,30 @@ int main(int argc,char **argv)
     printf("official hostname: %s\n", hptr->h_name);
 
     // 遍历所有的主机别名
+    int alias_count = 0;
     for(pptr=hptr->h_aliases; *pptr!=NULL; pptr++)
     {
-        printf("\talias: %s\n",*pptr);
+        alias_count++;
+        printf("\talias: %s\n", *pptr);
     }
+    printf("alias_count:%d\n", alias_count);
    
     // 遍历所有的主机地址
     switch(hptr->h_addrtype) // 判断 socket 类型
     {
       case AF_INET:  // IP 类 为AF_INET
       {
-          pptr = hptr->h_addr_list; //IP地址数组
-        for(; *pptr!=NULL; pptr++)
+          int addr_count = 0;
+        for(pptr = hptr->h_addr_list; *pptr!=NULL; pptr++)
         {
+            addr_count++;
             printf("\taddress: %s\n",
                 inet_ntop(hptr->h_addrtype, *pptr, str, sizeof(str))); // inet_ntop 转换为点分十进制
 
            // printf("\taddress: %s\n",
                 // inet_ntoa(*(struct in_addr*)pptr); // inet_ntoa 转换为点分十进制
         }
+          printf("addr_count:%d\n", addr_count);
       }
         break;
       default:
