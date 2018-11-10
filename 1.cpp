@@ -39,6 +39,7 @@ int main(int argc,char **argv)
         switch(hptr->h_addrtype) // 判断 socket 类型
         {
           case AF_INET:  // IP 类 为AF_INET
+          case AF_INET6:  //IP类为AF_INET6
           {
               int addr_count = 0;
             for(pptr = hptr->h_addr_list; *pptr!=NULL; pptr++)
@@ -61,7 +62,26 @@ int main(int argc,char **argv)
     
     // gethostbyaddr
     {
+        char **pptr;
+        char str[INET_ADDRSTRLEN];
+       struct hostent *hptr;
         
+       struct sockaddr_in saddr;
+        
+        char addr[] = "127.0.0.1";
+     　　if(!inet_aton(addr, &saddr.sin_addr )) //调用inet_aton()，将ptr点分十进制转in_addr
+     　　{
+        　　printf("Inet_aton error\n");
+         　　return 1;
+     　　}
+ 
+        hptr = gethostbyaddr((void *)&saddr.sin_addr, 4, AF_INET);
+     　　if(hptr == NULL) //把主机信息保存在hostent中
+     　　{
+         　　printf("gethostbyaddr error for addr:%s\n", addr);
+         　　printf("h_errno %d\n", h_errno);
+         　　return 1;
+     　　}
     }
     
  
